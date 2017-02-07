@@ -31,8 +31,11 @@ var scriboData = process.argv.slice(3).join(" ");
 function getTweets() {
 
 	client.get('statuses/user_timeline', params, function(error, tweets, response) {
+	  var logTimestamp = moment(new Date());
+	  var logData = [logTimestamp, 'my-tweets'];
 	  if (!error) {
 	    // console.log(tweets);
+	    
 	    for (var i = 0; i < tweets.length; i++) {
 
 	    	var timestamp = moment(new Date(tweets[i].created_at));
@@ -43,8 +46,13 @@ function getTweets() {
 	    	console.log("");
 	    	console.log("####################");
 	    	console.log("####################");
+
+	    	logData.push(Array.from(timestamp,tweets[i].text));
 	    }
+	  } else {
+	  	logData.push("my-tweets returned an error.");
 	  }
+	  updateLog(logData);
 	});
 }
 
@@ -69,14 +77,35 @@ function postTweet() {
 		});
 
 	} 
+	var logTimestamp = moment(new Date());
+	var logData = [logTimestamp, 'tweet', scriboData];
+	inquirer.prompt([
+		{
+			type: "confirm",
+    		message: "Are you sure you want me to post " + scriboData + " for you?",
+    		name: "confirm",
+    		default: true
 
-	client.post('statuses/update', {screen_name: screenName, status: scriboData},  function(error, tweet, response) {
-	  if(error) {
-	  	console.log(error);
-	  	throw error;
-	  }
-	  console.log("You're message has been tweeted!");  // Tweet body. 
-	  // console.log(response);  // Raw response object. 
+		}
+	]).then(function(response){
+
+		logData.push("User confirmed tweet = " + response.confirm);
+		updateLog(logData);
+		if (response.confirm) {
+
+			client.post('statuses/update', {screen_name: screenName, status: scriboData},  function(error, tweet, response) {
+			  if(error) {
+			  	console.log(error);
+			  	throw error;
+			  }
+			  console.log("I just tweeted for you: ");
+			  console.log(scriboData); 
+			  // console.log(response);  // Raw response object.
+			  
+			});
+		} else {
+			console.log("Okay. I won't post this tweet.");
+		}
 	});
 	
 }
@@ -88,9 +117,14 @@ function getSpotify() {
 		scriboData = "'The Sign' Ace of Base";
 	}
 
+	var logTimestamp = moment(new Date());
+	var logData = [logTimestamp, 'spotify-this-song'];
+
 	Spotify.search({ type: 'track', query: scriboData}, function(err, data) {
 	    if ( err ) {
 	        console.log('Error occurred: ' + err);
+	        logData.push("Spotify Error!");
+	        updateLog(logData);
 	        return;
 	    }
 	    
@@ -107,43 +141,158 @@ function getSpotify() {
 	    var previewLink = track.preview_url;
 	    var albumName = track.album.name;
 
-	    var noteBorder = '&#9834;&#9835;&#9834;&#9835;&#9834;&#9835;&#9834;&#9835;&#9834;&#9835;&#9834;&#9835;';
 	    console.log("");
-	    console.log(noteBorder);
+	    console.log("$$$$$$$$$$$$$$$$$$$$");
 	    console.log("");
 	    console.log("Track '" + trackName + ".'");
 	    console.log("Recorded by '" + artistName + ".'");
 	    console.log("On the Album '" + albumName + ".'");
 	    console.log("Preview this song at - " + previewLink);
 	    console.log("");
-	    console.log(noteBorder);
+	    console.log("$$$$$$$$$$$$$$$$$$$$");
 	    console.log("");
+	    logData.push(trackName, artistName, albumName, previewLink);
+	    updateLog(logData);
 	});
 
 }
 
-switch (scriboCommand) {
+function getMovie() {
 
-	case 'tweet': 
-		postTweet();
-		break;
+	if(!scriboData) {
 
-	case 'my-tweets':
-		getTweets();
-		break;
+		scriboData = "Mr. Nobody";
+	}
+	var logTimestamp = moment(new Date());
+	var logData = [logTimestamp, 'movie-this'];
 
-	case 'spotify-this-song':
-		getSpotify();
-		break;
+	imdb.get(scriboData).then(function(things){
 
-	case 'movie-this':
-		getMovie();
-		break;
+    	movie = things.Movie;
 
-	default:
-		console.log("");
-		console.log("!!!!"); 
-		console.log("Can you please repeat that? I do not understand what you are requesting.");
-		console.log("!!!!");
-		console.log("");
+    	var title = movie.title;
+    	var released = moment(new Date(movie.released));
+    	var rated = movie.rated;
+    	var rating = movie.rating;
+    	var country = movie.country;
+    	var language = movie.languages;
+    	var plot = movie.plot;
+    	var actors = movie.actors;
+
+    	console.log("");
+	    console.log("$$$$$$$$$$$$$$$$$$$$");
+	    console.log("");
+	    console.log(title);
+	    console.log("Released on " + released.format("dddd, MMMM Do YYYY"));
+	    console.log("Rated " + rated);
+	    console.log("Starring " + actors);
+	    console.log(plot);
+	    console.log("IMDB User Rating (out of 10): " + rating);
+	    console.log("Languages: " + language);
+	    console.log("Produced in " + country);
+	    console.log("");
+	    console.log("$$$$$$$$$$$$$$$$$$$$");
+	    console.log("");
+	    logData.push(title, released, rated, actors, plot, rating, language, country);
+	    updateLog(logData);
+	}).catch(function(issue){
+		console.log('Access to OMDB is unavailable.');
+		logData.push("An error occured with OMDB.");
+		updateLog(logData);
+	});
+
+	
 }
+
+function getRandomCommand() {
+	var logTimestamp = moment(new Date());
+	var logData = [logTimestamp, 'do-what-it-says'];
+
+	fs.readFile('random.txt', 'utf-8', function(err, data) {
+		if(err){
+			console.log(err);
+		} else {
+			// console.log(data);
+			var possibleSet = data.split("|");
+			var randomIndex = Math.floor(Math.random() * possibleSet.length);
+			var randomSet = possibleSet[randomIndex].split(",");
+			var randomCommand = randomSet[0];
+			if (randomSet[1]) {
+				scriboData = randomSet[1];
+			}
+			logData.push(randomSet);
+			updateLog(logData);
+			callCommands(randomCommand);	
+		}
+	});
+}
+
+function updateLog(values) {
+	if (!fs.existsSync('log.txt')) {
+		fs.writeFileSync('log.txt', "|" + values);
+	} else {
+		fs.appendFile('log.txt', "|" + values, (err) => {
+  			if (err) throw err;});
+	}
+}
+
+function deleteLog() {
+	fs.unlink('log.txt', function(err){
+		if(err){
+			console.log(err);
+		} else {
+			console.log("I have deleted the previous log information.");
+			var logTimestamp = moment(new Date());
+			var logData = [logTimestamp, "delete-log", "successful"];
+			updateLog(logData);
+		}
+	});
+}
+
+var delay; //initialize timeout variable;
+function callCommands(command) {
+
+	switch (command) {
+
+		case 'tweet':
+			console.log("I'm going to tweet something for you!");
+			delay = setTimeout(postTweet,2000);
+			break;
+
+		case 'my-tweets':
+			console.log("I'm going to retrieve your last twenty tweets.");
+			delay = setTimemout(getTweets, 2000);
+			break;
+
+		case 'spotify-this-song':
+			console.log("I'm going to find song data for you.");
+			delay = setTimeout(getSpotify, 2000);
+			break;
+
+		case 'movie-this':
+			console.log("I'm going to find movie data for you.");
+			delay = setTimeout(getMovie, 2000);
+			break;
+
+		case 'do-what-it-says':
+			console.log("Hello, I am Scribo. I've got just the thing for this situaion...");
+			getRandomCommand();
+			break;
+
+		case 'clear-log':
+			console.log("Let me start the process for deleting the log.");
+			deleteLog();
+			break;
+
+		default:
+			console.log("");
+			console.log("!!!!"); 
+			console.log("Can you please repeat that? I do not understand what you are requesting.");
+			console.log("!!!!");
+			console.log("");
+			var logTimestamp = moment(new Date());
+			updateLog(logTimestamp, "User entered an invalid command.");
+	}
+}
+
+callCommands(scriboCommand);

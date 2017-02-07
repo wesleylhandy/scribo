@@ -1,5 +1,5 @@
 # scribo
-Scribo (or 'scribe' for short), is a Language Interpretation and Recognition Interface; More specifically, scribe is a a command line node.js application that takes in parameters and returns back data. Initially, Scribe uses node packages for the Twitter, Spotify and OMBD apis to return recent tweets, song and movie information.
+Scribo (or 'scribe' for short), is a Language Interpretation and Recognition Interface; More specifically, scribe is a a command line node.js application that takes in parameters and returns back data. Initially, Scribe uses node packages for Twitter, Spotify and IMBD to return recent tweets, song and movie information.
 
 ###Installation Instructions
 
@@ -55,3 +55,7 @@ From the command line, you can run the following:
 
 - `do-what-it-says`
 >This command will run a default command retrieved from an external .txt file.
+
+###Known Issues
+
+Currently, IMDB does not provide a public API. Alternatively, the OMDBAPI (http://www.omdbapi.com) is currently experiencing problems and is unaccessible. :grimacing: (Date: 02/07/2017).

@@ -1,4 +1,4 @@
-console.log('this is loaded');
+console.log('Scribo is loaded');
 
 exports.twitterKeys = {
   consumer_key: 'ejyhIypBQc4XSPTgXee3Ylwje',
