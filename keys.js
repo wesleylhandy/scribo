@@ -1,4 +1,4 @@
-console.log('Scribo is loaded');
+console.log("Hello, I'm Scribo, your lexical interpreter.");
 
 exports.twitterKeys = {
   consumer_key: 'ejyhIypBQc4XSPTgXee3Ylwje',
@@ -8,5 +8,5 @@ exports.twitterKeys = {
 }
 
 exports.user = {
-	screen_name: 'wesleylhandy'
+	screen_name: null
 }

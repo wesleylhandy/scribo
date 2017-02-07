@@ -30,84 +30,93 @@ var scriboData = process.argv.slice(3).join(" ");
 
 function getTweets() {
 
-	client.get('statuses/user_timeline', params, function(error, tweets, response) {
-	  var logTimestamp = moment(new Date());
-	  var logData = [logTimestamp, 'my-tweets'];
-	  if (!error) {
-	    // console.log(tweets);
-	    
-	    for (var i = 0; i < tweets.length; i++) {
+	inquirer.prompt([
+		{
+			type: 'input',
+			message: 'What is your Twitter Handle?',
+			name: 'name'
+		}
+	]).then(function(user) {
+		screenName = user.name;
+	
+		client.get('statuses/user_timeline', {screen_name: screenName}, function(error, tweets, response) {
+		  var logTimestamp = moment(new Date());
+		  var logData = [logTimestamp, 'my-tweets'];
+		  if (!error) {
+		    // console.log(tweets);
+		    
+		    for (var i = 0; i < tweets.length; i++) {
 
-	    	var timestamp = moment(new Date(tweets[i].created_at));
-	    	console.log("");
-	    	console.log(timestamp.format("dddd, MMMM Do YYYY, h:mm:ss a"));
-	    	console.log("");
-	    	console.log(tweets[i].text);
-	    	console.log("");
-	    	console.log("####################");
-	    	console.log("####################");
+		    	var timestamp = moment(new Date(tweets[i].created_at));
+		    	console.log("");
+		    	console.log(timestamp.format("dddd, MMMM Do YYYY, h:mm:ss a"));
+		    	console.log("");
+		    	console.log(tweets[i].text);
+		    	console.log("");
+		    	console.log("####################");
+		    	console.log("####################");
 
-	    	logData.push(Array.from(timestamp,tweets[i].text));
-	    }
-	  } else {
-	  	logData.push("my-tweets returned an error.");
-	  }
-	  updateLog(logData);
+		    	logData.push(timestamp,tweets[i].text);
+		    }
+		  } else {
+		  	logData.push("my-tweets returned an error.");
+		  }
+		  updateLog(logData);
+		});
 	});
 }
 
 function postTweet() {
 
 	if(!scriboData) {
-		inquirer.prompt([
-			{
-				type: 'input',
-				message: 'What is your Twitter Handle?',
-				name: 'name'
-			},
-			{
-				type: 'input',
-				message: "Please Enter the Content of Your Tweet (limit 140 characters): ",
-				name: 'content'
-			}
+		console.log("I am unable to understand what you want to be tweeted. Please tell me exactly what you want to say.");
+		var logTimestamp = moment(new Date());
+		var logData = [logTimestamp, 'tweet', 'No tweet data provided.'];
+		updateLog(logData);
+		return;
+	}
 
-		]).then(function(tweet){
-			scriboData = tweet.content;
-			screenName = tweet.name;
-		});
-
-	} 
-	var logTimestamp = moment(new Date());
-	var logData = [logTimestamp, 'tweet', scriboData];
 	inquirer.prompt([
 		{
-			type: "confirm",
-    		message: "Are you sure you want me to post " + scriboData + " for you?",
-    		name: "confirm",
-    		default: true
-
+			type: 'input',
+			message: 'What is your Twitter Handle?',
+			name: 'name'
 		}
-	]).then(function(response){
+	]).then(function(user){
 
-		logData.push("User confirmed tweet = " + response.confirm);
-		updateLog(logData);
-		if (response.confirm) {
+		screenName = user.name;
 
-			client.post('statuses/update', {screen_name: screenName, status: scriboData},  function(error, tweet, response) {
-			  if(error) {
-			  	console.log(error);
-			  	throw error;
-			  }
-			  console.log("I just tweeted for you: ");
-			  console.log(scriboData); 
-			  // console.log(response);  // Raw response object.
-			  
-			});
-		} else {
-			console.log("Okay. I won't post this tweet.");
-		}
-	});
-	
+
+		var logTimestamp = moment(new Date());
+		var logData = [logTimestamp, 'tweet', scriboData];
+		inquirer.prompt([
+			{
+				type: "confirm",
+	    		message: "Are you sure you want me to post " + scriboData + " for you?",
+	    		name: "confirm",
+	    		default: true
+			}
+		]).then(function(response){
+
+			logData.push("User confirmed tweet = " + response.confirm);
+			updateLog(logData);
+			if (response.confirm) {
+
+				client.post('statuses/update', {screen_name: screenName, status: scriboData},  function(error, tweet, response) {
+				  if(error) {
+				  	console.log(error);
+				  	throw error;
+				  }
+				  console.log("I just tweeted for you: ");
+				  console.log(scriboData); 
+				  // console.log(response);  // Raw response object.
+				  
+				});
+			} else {
+				console.log("Okay. I won't post this tweet.");
+			}
+		});
+	});	
 }
 
 function getSpotify() {
@@ -249,19 +258,18 @@ function deleteLog() {
 	});
 }
 
-var delay; //initialize timeout variable;
 function callCommands(command) {
-
+	var delay; //initialize timeout variable;
 	switch (command) {
 
 		case 'tweet':
-			console.log("I'm going to tweet something for you!");
+			console.log("I'll try to tweet something for you...");
 			delay = setTimeout(postTweet,2000);
 			break;
 
 		case 'my-tweets':
 			console.log("I'm going to retrieve your last twenty tweets.");
-			delay = setTimemout(getTweets, 2000);
+			delay = setTimeout(getTweets, 2000);
 			break;
 
 		case 'spotify-this-song':
@@ -275,7 +283,7 @@ function callCommands(command) {
 			break;
 
 		case 'do-what-it-says':
-			console.log("Hello, I am Scribo. I've got just the thing for this situaion...");
+			console.log("I've got just the thing for this situaion...");
 			getRandomCommand();
 			break;
 
