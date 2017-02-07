@@ -1,0 +1,26 @@
+{
+  "name": "scribo",
+  "version": "1.0.0",
+  "description": "Scribo (or 'scribe' for short), is a Language Interpretation and Recognition Interface; More specifically, scribe is a a command line node.js application that takes in parameters and returns back data. Initially, Scribe uses node packages for the Twitter, Spotify and OMBD apis to return recent tweets, song and movie information.",
+  "main": "scribo.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/wesleylhandy/scribo.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/wesleylhandy/scribo/issues"
+  },
+  "homepage": "https://github.com/wesleylhandy/scribo#readme",
+  "dependencies": {
+    "inquirer": "^3.0.1",
+    "moment": "^2.17.1",
+    "request": "^2.79.0",
+    "spotify": "^0.3.0",
+    "twitter": "^1.7.0"
+  }
+}
