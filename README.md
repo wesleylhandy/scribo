@@ -56,6 +56,9 @@ From the command line, you can run the following:
 - `do-what-it-says`
 >This command will run a default command retrieved from an external .txt file.
 
+- `clear-log`
+>All commands and data are stored in log.txt. Calling clear will delete previous information and start the log fresh.
+
 ###Known Issues
 
 Currently, IMDB does not provide a public API. Alternatively, the OMDBAPI (http://www.omdbapi.com) is currently experiencing problems and is unaccessible. :grimacing: (Date: 02/07/2017).
