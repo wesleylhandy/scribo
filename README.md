@@ -3,8 +3,8 @@ Scribo (or 'scribe' for short), is a Language Interpretation and Recognition Int
 
 ###Installation Instructions
 
-From the command line:
-`npm install`
+- Fork this repo
+- `npm install`
 
 ###Scribo Setup
 
