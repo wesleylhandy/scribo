@@ -6,3 +6,7 @@ exports.twitterKeys = {
   access_token_key: '42040497-L1oy8dETThzLaWjqqoP4nMtX3CE3sAQXVDwKWmi9g',
   access_token_secret: 't1HhGovGavOQ6iLv7JauIAcdU5AxTPgnZxdrAPD2hjBZn',
 }
+
+exports.user = {
+	screen_name: 'wesleylhandy'
+}

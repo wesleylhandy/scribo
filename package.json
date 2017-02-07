@@ -17,6 +17,7 @@
   },
   "homepage": "https://github.com/wesleylhandy/scribo#readme",
   "dependencies": {
+    "imdb-api": "^2.2.1",
     "inquirer": "^3.0.1",
     "moment": "^2.17.1",
     "request": "^2.79.0",
