@@ -91,7 +91,6 @@ function postTweet() {
 			  	console.log(error);
 			  	throw error;
 			  }
-			  console.log(response);
 			  console.log("I just tweeted for you: ");
 			  console.log(scriboData); 
 			  // console.log(response);  // Raw response object.
