@@ -13,12 +13,7 @@ const Spotify = require('spotify');
 const keys = require('./keys.js');
  
 //new Twitter api call
-const client = new Twitter({
-  consumer_key: keys.twitterKeys.consumer_key,
-  consumer_secret: keys.twitterKeys.consumer_secret,
-  access_token_key: keys.twitterKeys.access_token_key,
-  access_token_secret: keys.twitterKeys.access_token_secret
-});
+const client = new Twitter(keys.twitterKeys);
 
 //initialize twitter api variables
 var screenName = keys.user.screen_name;
@@ -33,7 +28,7 @@ function getTweets() {
 	inquirer.prompt([
 		{
 			type: 'input',
-			message: 'What is your Twitter Handle?',
+			message: 'Whose tweets would you like to read?',
 			name: 'name'
 		}
 	]).then(function(user) {
@@ -76,46 +71,35 @@ function postTweet() {
 		return;
 	}
 
+	var logTimestamp = moment(new Date());
+	var logData = [logTimestamp, 'tweet', scriboData];
 	inquirer.prompt([
 		{
-			type: 'input',
-			message: 'What is your Twitter Handle?',
-			name: 'name'
+			type: "confirm",
+    		message: "Are you sure you want me to post " + scriboData + " for you?",
+    		name: "confirm",
+    		default: true
 		}
-	]).then(function(user){
+	]).then(function(response){
 
-		screenName = user.name;
+		logData.push("User confirmed tweet = " + response.confirm);
+		updateLog(logData);
+		if (response.confirm) {
 
-
-		var logTimestamp = moment(new Date());
-		var logData = [logTimestamp, 'tweet', scriboData];
-		inquirer.prompt([
-			{
-				type: "confirm",
-	    		message: "Are you sure you want me to post " + scriboData + " for you?",
-	    		name: "confirm",
-	    		default: true
-			}
-		]).then(function(response){
-
-			logData.push("User confirmed tweet = " + response.confirm);
-			updateLog(logData);
-			if (response.confirm) {
-
-				client.post('statuses/update', {screen_name: screenName, status: scriboData},  function(error, tweet, response) {
-				  if(error) {
-				  	console.log(error);
-				  	throw error;
-				  }
-				  console.log("I just tweeted for you: ");
-				  console.log(scriboData); 
-				  // console.log(response);  // Raw response object.
-				  
-				});
-			} else {
-				console.log("Okay. I won't post this tweet.");
-			}
-		});
+			client.post('statuses/update', {screen_name: screenName, status: scriboData},  function(error, tweet, response) {
+			  if(error) {
+			  	console.log(error);
+			  	throw error;
+			  }
+			  console.log(response);
+			  console.log("I just tweeted for you: ");
+			  console.log(scriboData); 
+			  // console.log(response);  // Raw response object.
+			  
+			});
+		} else {
+			console.log("Okay. I won't post this tweet.");
+		}
 	});	
 }
 
@@ -227,7 +211,7 @@ function getRandomCommand() {
 			var randomSet = possibleSet[randomIndex].split(",");
 			var randomCommand = randomSet[0];
 			if (randomSet[1]) {
-				scriboData = randomSet[1];
+				scriboData = randomSet[1].replace('"'/g, '');
 			}
 			logData.push(randomSet);
 			updateLog(logData);
@@ -268,7 +252,7 @@ function callCommands(command) {
 			break;
 
 		case 'my-tweets':
-			console.log("I'm going to retrieve your last twenty tweets.");
+			console.log("I'm going some get some tweets for you.");
 			delay = setTimeout(getTweets, 2000);
 			break;
 
@@ -294,9 +278,9 @@ function callCommands(command) {
 
 		default:
 			console.log("");
-			console.log("!!!!"); 
+			console.log("!!!!!!!!!!!!!!!!!!!!"); 
 			console.log("Can you please repeat that? I do not understand what you are requesting.");
-			console.log("!!!!");
+			console.log("!!!!!!!!!!!!!!!!!!!!");
 			console.log("");
 			var logTimestamp = moment(new Date());
 			updateLog(logTimestamp, "User entered an invalid command.");
