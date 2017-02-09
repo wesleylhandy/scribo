@@ -61,4 +61,4 @@ From the command line, you can run the following:
 
 ###Known Issues
 
-Currently, IMDB does not provide a public API. Alternatively, the OMDBAPI (http://www.omdbapi.com) is currently experiencing problems and is unaccessible. :grimacing: (Date: 02/07/2017).
+~~Currently, IMDB does not provide a public API. Alternatively, the OMDBAPI (http://www.omdbapi.com) is currently experiencing problems and is unaccessible. :grimacing: (Date: 02/07/2017).~~ (Date: 02/09/2017)
