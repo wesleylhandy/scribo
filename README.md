@@ -8,7 +8,7 @@ Scribo (or 'scribe' for short), is a Language Interpretation and Recognition Int
 
 ###Scribo Setup
 
-Before running the program, open 'keys.js' in your text-editor and enter your own personal twitter information.
+Before running the program, create a file 'keys.js' by calling 'touch keys.js' on the command line. Then, in your text-editor, enter your own personal twitter information.
 
 Get your Twitter API keys by following these steps:
 
@@ -33,6 +33,7 @@ exports.user = {
 	screen_name: '<YOUR_TWITTER_HANDLE>'
 }
 ```
+You might consider utilizing environment variables for keeping your keys secret.
 
 ###Scribo Commands
 

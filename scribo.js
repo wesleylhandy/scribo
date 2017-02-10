@@ -13,11 +13,13 @@ const Spotify = require('spotify');
 const keys = require('./keys.js');
  
 //new Twitter api call
-const client = new Twitter(keys.twitterKeys);
+const client = new Twitter({
+	consumer_key: process.env.twitter_consumer_key,
+  	consumer_secret: process.env.twitter_consumer_secret,
+  	access_token_key: process.env.twitter_access_token_key,
+  	access_token_secret: process.env.twitter_access_token_secret
+});
 
-//initialize twitter api variables
-var screenName = keys.user.screen_name;
-var params = {screen_name: screenName};
 
 //get user arguments
 const scriboCommand = process.argv[2];
