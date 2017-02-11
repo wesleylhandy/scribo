@@ -43,15 +43,20 @@ From the command line, you can run the following:
 >This will return your 20 most recent tweets
 
 - `tweet <Tweet Content>`
+>*Currently this feature is disabled.* You will have to undo comments in scribo.js and allow write on twitter app setup.
+
 >You can enter the content of a tweet directly following this command, else the default will ask you to enter your twitter screen name and then the content of your tweet via prompts.
+
 >Hashtags are allowed if you place # inside quotes -> `'#'YOLO`.
 
 - `spotify-this-song <Song Name>`
 >Enter the name of the song for you desire to receive information from the Spotify database. Results are ordered by the popularity of the song, since song-titles are often reused dozens of times by various artists. Spotify will return a list of twenty songs, the most popular song of these titles will be displayed. To get more specific results, add the artist name after the title -> `Gravity Lecrae`
+
 >Default results will display if no song-title entered.
 
 - `movie-this <movie name>`
 >Enter the name of a movie you desire to receive information from the IMDB database. The first result will be displayed.
+
 >Default results will display if no movie-title entered.
 
 - `do-what-it-says`

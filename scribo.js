@@ -13,12 +13,7 @@ const Spotify = require('spotify');
 const keys = require('./keys.js');
  
 //new Twitter api call
-const client = new Twitter({
-	consumer_key: process.env.twitter_consumer_key,
-  	consumer_secret: process.env.twitter_consumer_secret,
-  	access_token_key: process.env.twitter_access_token_key,
-  	access_token_secret: process.env.twitter_access_token_secret
-});
+const client = new Twitter(keys.twitterkeys);
 
 
 //get user arguments
@@ -67,6 +62,7 @@ function getTweets() {
 	});
 }
 
+//disabled since keys are posted on github
 function postTweet() {
 
 	if(!scriboData) {
@@ -296,10 +292,10 @@ function callCommands(command) {
 	var delay; //initialize timeout variable;
 	switch (command) {
 
-		case 'tweet':
-			console.log("I'll try to tweet something for you...");
-			delay = setTimeout(postTweet,1000);
-			break;
+		// case 'tweet':
+		// 	console.log("I'll try to tweet something for you...");
+		// 	delay = setTimeout(postTweet,1000);
+		// 	break;
 
 		case 'my-tweets':
 			console.log("I'm going some get some tweets for you.");
