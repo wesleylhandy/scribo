@@ -13,7 +13,7 @@ const Spotify = require('spotify');
 const keys = require('./keys.js');
  
 //new Twitter api call
-const client = new Twitter(keys.twitterkeys);
+const client = new Twitter(keys.twitterKeys);
 
 
 //get user arguments
