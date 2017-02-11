@@ -258,10 +258,22 @@ function getRandomCommand() {
 
 function updateLog(object) {
 	if (!fs.existsSync('log.txt')) {
-		fs.writeFileSync('log.txt', JSON.stringify(object) + ",");
+		fs.writeFileSync('log.txt', "[" + JSON.stringify(object) + "]");
 	} else {
-		fs.appendFile('log.txt', JSON.stringify(object) + ",", (err) => {
-  			if (err) throw err;});
+		fs.readFile('log.txt', 'utf-8', (err, data) => {
+			if (err) {
+				console.log(err);
+			}
+
+			var arr = JSON.parse(data);
+
+			arr.push(object);
+
+			fs.writeFile('log.txt', JSON.stringify(arr), (err) => {
+  				if (err) throw err;
+  			});
+			
+		});
 	}
 }
 
