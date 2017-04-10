@@ -10,7 +10,7 @@ const Twitter = require('twitter');
 const Spotify = require('spotify');
 
 //import object
-const keys = require('./keys.js');
+const keys = require('./twitterkeys.js');
  
 //new Twitter api call
 const client = new Twitter(keys.twitterKeys);
