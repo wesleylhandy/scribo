@@ -159,8 +159,8 @@ function getMovie() {
 	if(!scriboData) {
 
 		scriboData = "Mr. Nobody";
-	}
-
+	} 
+	
 	var movieReq = "http://www.omdbapi.com/?t=" + scriboData + "&y=&plot=short&tomatoes=true&r=json";
 
 	// imdb.get(scriboData).then(function(things){
@@ -243,7 +243,7 @@ function getRandomCommand() {
 			var randomSet = possibleSet[randomIndex].split(",");
 			var randomCommand = randomSet[0];
 			if (randomSet[1]) {
-				scriboData = randomSet[1].replace('"'/g, '');
+				scriboData = randomSet[1].replace(/["]/g, '');
 			}
 			logData.command = scriboCommand;
 			logData.randomSet = randomSet;
@@ -292,10 +292,10 @@ function callCommands(command) {
 	var delay; //initialize timeout variable;
 	switch (command) {
 
-		// case 'tweet':
-		// 	console.log("I'll try to tweet something for you...");
-		// 	delay = setTimeout(postTweet,1000);
-		// 	break;
+		case 'tweet':
+			console.log("I'll try to tweet something for you...");
+			delay = setTimeout(postTweet,1000);
+			break;
 
 		case 'my-tweets':
 			console.log("I'm going some get some tweets for you.");
